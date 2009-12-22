@@ -4,7 +4,7 @@ Plugin Name: Trash Manager
 Plugin URI: http://www.poradnik-webmastera.com/projekty/trash_manager/
 Description: This plugin allows you to delete Posts, Pages and Comments without moving them to Trash first. Additionally it restores all 'Are you sure?' questions when you try to delete, trash or restore something.
 Author: Daniel Frużyński
-Version: 1.0
+Version: 1.1
 Author URI: http://www.poradnik-webmastera.com/
 Text Domain: trash-manager
 */
@@ -50,28 +50,35 @@ class TrashManager {
 			// Add actions to each comment on Comment List
 			add_filter( 'comment_row_actions', array( &$this, 'comment_row_actions' ), 10, 2 );
 			
-			// Load additional JS script
-			wp_enqueue_script( 'trash-manager', 
-				WP_PLUGIN_URL.'/'.dirname( plugin_basename( __FILE__ ) ).'/trash-manager.js',
-				array( 'common' ), TRASH_MGR_VER );
-			wp_localize_script( 'trash-manager', 'trashMgrL10n', array(
-				'bulkDelete' => __("You are about to delete the selected items.\n  'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
-				'bulkTrash' => __("You are about to trash the selected items.\n  'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
-				'bulkUntrash' => __("You are about to restore the selected items.\n  'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
-				'commentDelete' => __("You are about to delete this comment\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
-				'commentTrash' => __("You are about to trash this comment\n 'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
-				'commentUntrash' => __("You are about to restore this comment\n 'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
-			) );
+			// HACK: WP does not delete posts/pages/comments directly, it moves them to trash first.
+			// Therefore we need to delete them (finally!) after they are moved to trash
+			add_action( 'trashed_post', array( &$this, 'trashed_post' ) );
+			add_action( 'trashed_comment', array( &$this, 'trashed_comment' ) );
+			
+			// Workaround: WP does not clear temporary variable after changing comment status
+			add_action( 'wp_set_comment_status', array( &$this, 'wp_set_comment_status' ), 10, 2 );
 		}
 	}
 	
 	// Initialise plugin
 	function init() {
-		load_plugin_textdomain( 'trash-manager', WP_PLUGIN_DIR.'/'.dirname( plugin_basename( __FILE__ ) ) );
+		load_plugin_textdomain( 'trash-manager', false, dirname( plugin_basename( __FILE__ ) ) );
 	}
 	
 	// Initialise plugin - admin part
 	function admin_init() {
+		// Load additional JS script
+		wp_enqueue_script( 'trash-manager', 
+			WP_PLUGIN_URL.'/'.dirname( plugin_basename( __FILE__ ) ).'/trash-manager.js',
+			array( 'common' ), TRASH_MGR_VER );
+		wp_localize_script( 'trash-manager', 'trashMgrL10n', array(
+			'bulkDelete' => __("You are about to delete the selected items.\n  'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
+			'bulkTrash' => __("You are about to trash the selected items.\n  'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
+			'bulkUntrash' => __("You are about to restore the selected items.\n  'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
+			'commentDelete' => __("You are about to delete this comment\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
+			'commentTrash' => __("You are about to trash this comment\n 'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
+			'commentUntrash' => __("You are about to restore this comment\n 'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
+		) );
 	}
 	
 	// Add Admin menu option
@@ -203,6 +210,41 @@ class TrashManager {
 	function add_AYS_code( $html, $message ) {
 		return str_replace( '<a ', '<a onclick="if(confirm(\'' . esc_js( $message ) . 
 			'\')){return true;};return false;" ', $html );
+	}
+	
+	// Delete post/page after it gets trashed instead of deleted
+	function trashed_post( $post_ID ) {
+		global $action;
+		if ( isset( $action ) && ( $action == 'delete' ) ) {
+			wp_delete_post( $post_ID, true );
+		}
+	}
+	
+	// Workaround: WP does not clear temporary variable after changing comment status
+	function wp_set_comment_status( $comment_id, $comment_status ) {
+		if ( ( $comment_status == 'trash' ) && isset( $GLOBALS['comment'] ) 
+			&& ( $GLOBALS['comment']->comment_ID == $comment_id ) ) {
+			unset( $GLOBALS['comment'] );
+		}
+	}
+	
+	// Delete comment after it gets trashed instead of deleted
+	function trashed_comment( $comment_ID ) {
+		global $action;
+		if ( isset( $action ) ) {
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				if ( ( $action == 'delete-comment' ) && isset( $_POST['delete'] ) && ($_POST['delete'] == 1 ) ) {
+					//die('DUPA1');
+					wp_delete_comment( $comment_ID, true );
+				}
+			} else {
+				if ( $action == 'deletecomment' ) {
+					//die('DUPA2');
+					//echo 'DUPA';
+					wp_delete_comment( $comment_ID, true );
+				}
+			}
+		}
 	}
 	
 	// Handle options panel
