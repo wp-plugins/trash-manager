@@ -3,7 +3,7 @@ Contributors: sirzooro
 Tags: trash, delete, restore, admin, post, posts, page, pages, comment, comments
 Requires at least: 2.9
 Tested up to: 2.9.9
-Stable tag: 1.1
+Stable tag: 1.1.1
 
 This plugin allows you to delete Posts, Pages and Comments without moving them to Trash first. Additionally it restores all Are you sure? questions.
 
@@ -21,6 +21,7 @@ Available translations:
 
 * English
 * Polish (pl_PL) - done by me
+* Dutch (nl_NL) - thanks [Rene](http://wordpresspluginguide.com/)
 
 [Changelog](http://wordpress.org/extend/plugins/trash-manager/changelog/)
 
@@ -31,6 +32,10 @@ Available translations:
 1. Configure and enjoy :)
 
 == Changelog ==
+
+= 1.1.1 =
+* Added Dutch translation (thanks Rene);
+* Code cleanup
 
 = 1.1 =
 * Fix: WP always moves posts/pages/comments to trash instead of deleting them directly - added workaround;

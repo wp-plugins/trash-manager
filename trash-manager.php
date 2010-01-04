@@ -4,12 +4,12 @@ Plugin Name: Trash Manager
 Plugin URI: http://www.poradnik-webmastera.com/projekty/trash_manager/
 Description: This plugin allows you to delete Posts, Pages and Comments without moving them to Trash first. Additionally it restores all 'Are you sure?' questions when you try to delete, trash or restore something.
 Author: Daniel Frużyński
-Version: 1.1
+Version: 1.1.1
 Author URI: http://www.poradnik-webmastera.com/
 Text Domain: trash-manager
 */
 
-/*  Copyright 2009  Daniel Frużyński  (email : daniel [A-T] poradnik-webmastera.com)
+/*  Copyright 2009-2010  Daniel Frużyński  (email : daniel [A-T] poradnik-webmastera.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ Text Domain: trash-manager
 
 if ( !class_exists( 'TrashManager' ) ) {
 
-define( 'TRASH_MGR_VER', '1.0' );
+define( 'TRASH_MGR_JS_VER', '1.0' );
 
 class TrashManager {
 	// Constructor
@@ -62,7 +62,7 @@ class TrashManager {
 	
 	// Initialise plugin
 	function init() {
-		load_plugin_textdomain( 'trash-manager', false, dirname( plugin_basename( __FILE__ ) ) );
+		load_plugin_textdomain( 'trash-manager', false, dirname( plugin_basename( __FILE__ ) ).'/lang' );
 	}
 	
 	// Initialise plugin - admin part
@@ -70,7 +70,7 @@ class TrashManager {
 		// Load additional JS script
 		wp_enqueue_script( 'trash-manager', 
 			WP_PLUGIN_URL.'/'.dirname( plugin_basename( __FILE__ ) ).'/trash-manager.js',
-			array( 'common' ), TRASH_MGR_VER );
+			array( 'common' ), TRASH_MGR_JS_VER );
 		wp_localize_script( 'trash-manager', 'trashMgrL10n', array(
 			'bulkDelete' => __("You are about to delete the selected items.\n  'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
 			'bulkTrash' => __("You are about to trash the selected items.\n  'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
@@ -84,7 +84,7 @@ class TrashManager {
 	// Add Admin menu option
 	function admin_menu() {
 		add_submenu_page( 'options-general.php', 'Trash Manager', 
-			'Trash Manager', 10, __FILE__, array( $this, 'options_panel' ) );
+			'Trash Manager', 'manage_options', __FILE__, array( &$this, 'options_panel' ) );
 	}
 	
 	// Add actions to each post on Post List
@@ -234,13 +234,10 @@ class TrashManager {
 		if ( isset( $action ) ) {
 			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 				if ( ( $action == 'delete-comment' ) && isset( $_POST['delete'] ) && ($_POST['delete'] == 1 ) ) {
-					//die('DUPA1');
 					wp_delete_comment( $comment_ID, true );
 				}
 			} else {
 				if ( $action == 'deletecomment' ) {
-					//die('DUPA2');
-					//echo 'DUPA';
 					wp_delete_comment( $comment_ID, true );
 				}
 			}
@@ -250,7 +247,6 @@ class TrashManager {
 	// Handle options panel
 	function options_panel() {
 ?>
-<div id="dropmessage" class="updated" style="display:none;"></div>
 <div class="wrap">
 <h2>Trash Manager</h2>
 
