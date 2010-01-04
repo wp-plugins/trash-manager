@@ -7,18 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Trash Manager\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/trash-manager\n"
-"POT-Creation-Date: 2009-12-19 23:12+0000\n"
-"PO-Revision-Date: 2009-12-20 00:22+0100\n"
+"POT-Creation-Date: 2010-01-04 22:22+0000\n"
+"PO-Revision-Date: 2010-01-04 23:23+0100\n"
 "Last-Translator: Daniel Frużyński <daniel [A-T] poradnik-webmastera.com>\n"
 "Language-Team: Daniel Fruzynski <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: POLAND\n"
 "X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2\n"
 
-#: trash-manager.php:58
+#: trash-manager.php:75
 msgid ""
 "You are about to delete the selected items.\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -26,7 +27,7 @@ msgstr ""
 "Zamierzasz usunąć wybrane elementy.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby usunąć."
 
-#: trash-manager.php:59
+#: trash-manager.php:76
 msgid ""
 "You are about to trash the selected items.\n"
 "  'Cancel' to stop, 'OK' to trash."
@@ -34,7 +35,7 @@ msgstr ""
 "Zamierzasz przenieść do kosza wybrane elementy.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby przenieść."
 
-#: trash-manager.php:60
+#: trash-manager.php:77
 msgid ""
 "You are about to restore the selected items.\n"
 "  'Cancel' to stop, 'OK' to restore."
@@ -42,7 +43,7 @@ msgstr ""
 "Zamierzasz przywrócić wybrane elementy.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby przywrócić."
 
-#: trash-manager.php:61
+#: trash-manager.php:78
 msgid ""
 "You are about to delete this comment\n"
 " 'Cancel' to stop, 'OK' to delete."
@@ -50,7 +51,7 @@ msgstr ""
 "Zamierzasz usunąć ten komentarz.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby usunąć."
 
-#: trash-manager.php:62
+#: trash-manager.php:79
 msgid ""
 "You are about to trash this comment\n"
 " 'Cancel' to stop, 'OK' to trash."
@@ -58,7 +59,7 @@ msgstr ""
 "Zamierzasz przenieść do kosza ten komentarz.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby przenieść."
 
-#: trash-manager.php:63
+#: trash-manager.php:80
 msgid ""
 "You are about to restore this comment\n"
 " 'Cancel' to stop, 'OK' to restore."
@@ -66,18 +67,18 @@ msgstr ""
 "Zamierzasz przywrócić ten komentarz.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby przywrócić."
 
-#: trash-manager.php:94
+#: trash-manager.php:101
 msgid "Delete this post permanently"
 msgstr "Usuń ten wpis na zawsze"
 
-#: trash-manager.php:96
-#: trash-manager.php:143
-#: trash-manager.php:193
+#: trash-manager.php:103
+#: trash-manager.php:150
+#: trash-manager.php:200
 msgid "Delete Permanently"
 msgstr "Usuń na zawsze"
 
-#: trash-manager.php:105
-#: trash-manager.php:152
+#: trash-manager.php:112
+#: trash-manager.php:159
 #, php-format
 msgid ""
 "You are about to delete this draft '%s'\n"
@@ -86,7 +87,7 @@ msgstr ""
 "Zamierzasz usunąć szkic wpisu '%s'.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby usunąć."
 
-#: trash-manager.php:106
+#: trash-manager.php:113
 #, php-format
 msgid ""
 "You are about to delete this post '%s'\n"
@@ -95,7 +96,7 @@ msgstr ""
 "Zamierzasz usunąć wpis '%s'.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby usunąć."
 
-#: trash-manager.php:114
+#: trash-manager.php:121
 #, php-format
 msgid ""
 "You are about to trash this post '%s'\n"
@@ -104,7 +105,7 @@ msgstr ""
 "Zamierzasz przenieść do kosza wpis '%s'.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby przenieść."
 
-#: trash-manager.php:122
+#: trash-manager.php:129
 #, php-format
 msgid ""
 "You are about to restore this post '%s'\n"
@@ -113,11 +114,11 @@ msgstr ""
 "Zamierzasz przywrócić wpis '%s'.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby przywrócić."
 
-#: trash-manager.php:141
+#: trash-manager.php:148
 msgid "Delete this page permanently"
 msgstr "Usuń tą stronę na zawsze"
 
-#: trash-manager.php:153
+#: trash-manager.php:160
 #, php-format
 msgid ""
 "You are about to delete this page '%s'\n"
@@ -126,7 +127,7 @@ msgstr ""
 "Zamierzasz usunąć stronę '%s'.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby usunąć."
 
-#: trash-manager.php:161
+#: trash-manager.php:168
 #, php-format
 msgid ""
 "You are about to trash this page '%s'\n"
@@ -135,7 +136,7 @@ msgstr ""
 "Zamierzasz przenieść do kosza stronę '%s'.\n"
 "  Naciśnij 'Anuluj' to aby przerwać, 'OK' aby przenieść."
 
-#: trash-manager.php:169
+#: trash-manager.php:176
 #, php-format
 msgid ""
 "You are about to restore this page '%s'\n"
@@ -157,8 +158,8 @@ msgid "This plugin allows you to delete Posts, Pages and Comments without moving
 msgstr "Ten plugin pozwala na kasowanie wpisów, stron i komentarzy bez przenoszenia ich najpierw do kosza. Dodatkowo przywraca on wszytkie pytania \"Czy jesteś pewien?\" kiedy próbujesz coś kasować, przenosić do kosza lub z niego przywracać."
 
 #. Author of an extension
-msgid "Daniel Fruyski"
-msgstr "Daniel Fruyski"
+msgid "Daniel Frużyński"
+msgstr "Daniel Frużyński"
 
 #. Author URI of an extension
 msgid "http://www.poradnik-webmastera.com/"

@@ -1,112 +1,112 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Daniel Fruyski
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Translation of the WordPress plugin Trash Manager 1.1.1 by Daniel Frużyński.
+# Copyright (C) 2010 Daniel Frużyński
+# This file is distributed under the same license as the Trash Manager package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Trash Manager 1.1.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/trash-manager\n"
-"POT-Creation-Date: 2009-12-19 23:12+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2010-01-04 22:22+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: trash-manager.php:58
+#: trash-manager.php:75
 msgid ""
 "You are about to delete the selected items.\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: trash-manager.php:59
+#: trash-manager.php:76
 msgid ""
 "You are about to trash the selected items.\n"
 "  'Cancel' to stop, 'OK' to trash."
 msgstr ""
 
-#: trash-manager.php:60
+#: trash-manager.php:77
 msgid ""
 "You are about to restore the selected items.\n"
 "  'Cancel' to stop, 'OK' to restore."
 msgstr ""
 
-#: trash-manager.php:61
+#: trash-manager.php:78
 msgid ""
 "You are about to delete this comment\n"
 " 'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: trash-manager.php:62
+#: trash-manager.php:79
 msgid ""
 "You are about to trash this comment\n"
 " 'Cancel' to stop, 'OK' to trash."
 msgstr ""
 
-#: trash-manager.php:63
+#: trash-manager.php:80
 msgid ""
 "You are about to restore this comment\n"
 " 'Cancel' to stop, 'OK' to restore."
 msgstr ""
 
-#: trash-manager.php:94
+#: trash-manager.php:101
 msgid "Delete this post permanently"
 msgstr ""
 
-#: trash-manager.php:96 trash-manager.php:143 trash-manager.php:193
+#: trash-manager.php:103 trash-manager.php:150 trash-manager.php:200
 msgid "Delete Permanently"
 msgstr ""
 
-#: trash-manager.php:105 trash-manager.php:152
+#: trash-manager.php:112 trash-manager.php:159
 #, php-format
 msgid ""
 "You are about to delete this draft '%s'\n"
 " 'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: trash-manager.php:106
+#: trash-manager.php:113
 #, php-format
 msgid ""
 "You are about to delete this post '%s'\n"
 " 'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: trash-manager.php:114
+#: trash-manager.php:121
 #, php-format
 msgid ""
 "You are about to trash this post '%s'\n"
 " 'Cancel' to stop, 'OK' to trash."
 msgstr ""
 
-#: trash-manager.php:122
+#: trash-manager.php:129
 #, php-format
 msgid ""
 "You are about to restore this post '%s'\n"
 " 'Cancel' to stop, 'OK' to restore."
 msgstr ""
 
-#: trash-manager.php:141
+#: trash-manager.php:148
 msgid "Delete this page permanently"
 msgstr ""
 
-#: trash-manager.php:153
+#: trash-manager.php:160
 #, php-format
 msgid ""
 "You are about to delete this page '%s'\n"
 " 'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: trash-manager.php:161
+#: trash-manager.php:168
 #, php-format
 msgid ""
 "You are about to trash this page '%s'\n"
 " 'Cancel' to stop, 'OK' to trash."
 msgstr ""
 
-#: trash-manager.php:169
+#: trash-manager.php:176
 #, php-format
 msgid ""
 "You are about to restore this page '%s'\n"
@@ -129,7 +129,7 @@ msgid ""
 msgstr ""
 
 #. Author of an extension
-msgid "Daniel Fruyski"
+msgid "Daniel Frużyński"
 msgstr ""
 
 #. Author URI of an extension
