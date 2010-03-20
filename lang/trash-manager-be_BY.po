@@ -1,0 +1,166 @@
+# Translation of the WordPress plugin Trash Manager 1.1.1 by Daniel Fruzynski.
+# Copyright (C) 2010 Daniel Fruzynski
+# This file is distributed under the same license as the Trash Manager package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Trash Manager\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/trash-manager\n"
+"POT-Creation-Date: 2010-01-04 22:22+0000\n"
+"PO-Revision-Date: 2010-03-14 19:24+0300\n"
+"Last-Translator: FatCow <zhr@tut.by>\n"
+"Language-Team: Marcis G <zhr@tut.by>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Belarusian\n"
+"X-Poedit-Country: BELARUS\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: trash-manager.php:75
+msgid ""
+"You are about to delete the selected items.\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы збіраецеся выдаліць абраныя элементы.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:76
+msgid ""
+"You are about to trash the selected items.\n"
+"  'Cancel' to stop, 'OK' to trash."
+msgstr ""
+"Вы збіраецеся выдаліць у кошык абраныя элементы.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:77
+msgid ""
+"You are about to restore the selected items.\n"
+"  'Cancel' to stop, 'OK' to restore."
+msgstr ""
+"Вы збіраецеся аднавіць абраныя элементы.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:78
+msgid ""
+"You are about to delete this comment\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы збіраецеся выдаліць каментар  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:79
+msgid ""
+"You are about to trash this comment\n"
+" 'Cancel' to stop, 'OK' to trash."
+msgstr ""
+"Вы збіраецеся выдаліць у кошык каментар  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:80
+msgid ""
+"You are about to restore this comment\n"
+" 'Cancel' to stop, 'OK' to restore."
+msgstr ""
+"Вы збіраецеся аднавіць каментар  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:101
+msgid "Delete this post permanently"
+msgstr "Выдаліць гэты пост"
+
+#: trash-manager.php:103
+#: trash-manager.php:150
+#: trash-manager.php:200
+msgid "Delete Permanently"
+msgstr "Выдаліць цалкам"
+
+#: trash-manager.php:112
+#: trash-manager.php:159
+#, php-format
+msgid ""
+"You are about to delete this draft '%s'\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы збіраецеся выдаліць чарнавы запіс  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:113
+#, php-format
+msgid ""
+"You are about to delete this post '%s'\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы збіраецеся выдаліць гэты пост  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:121
+#, php-format
+msgid ""
+"You are about to trash this post '%s'\n"
+" 'Cancel' to stop, 'OK' to trash."
+msgstr ""
+"Вы збіраецеся выдаліць у кошык гэты пост  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:129
+#, php-format
+msgid ""
+"You are about to restore this post '%s'\n"
+" 'Cancel' to stop, 'OK' to restore."
+msgstr ""
+"Вы збіраецеся аднавіць гэты пост  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:148
+msgid "Delete this page permanently"
+msgstr "Выдаліць гэту старонку"
+
+#: trash-manager.php:160
+#, php-format
+msgid ""
+"You are about to delete this page '%s'\n"
+" 'Cancel' to stop, 'OK' to delete."
+msgstr ""
+"Вы збіраецеся выдаліць старонку  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:168
+#, php-format
+msgid ""
+"You are about to trash this page '%s'\n"
+" 'Cancel' to stop, 'OK' to trash."
+msgstr ""
+"Вы збіраецеся выдаліць у кошык гэту старонку  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#: trash-manager.php:176
+#, php-format
+msgid ""
+"You are about to restore this page '%s'\n"
+" 'Cancel' to stop, 'OK' to restore."
+msgstr ""
+"Вы збіраецеся выдаліць гэту старонку  '%s.\n"
+"  'Cancel' для адмены, 'OK' для выдалення."
+
+#. Plugin Name of an extension
+msgid "Trash Manager"
+msgstr "Trash Manager"
+
+#. Plugin URI of an extension
+msgid "http://www.poradnik-webmastera.com/projekty/trash_manager/"
+msgstr "http://www.poradnik-webmastera.com/projekty/trash_manager/"
+
+#. Description of an extension
+msgid "This plugin allows you to delete Posts, Pages and Comments without moving them to Trash first. Additionally it restores all 'Are you sure?' questions when you try to delete, trash or restore something."
+msgstr "Гэта ўбудова дазваляе выдаляць паведамленні, старонкі і каментары, не перасоўваючы іх у кошык у першую чаргу. Акрамя таго ён аднаўляе ўсё 'Вы ўпэўнены?' Пытанні пры спробе выдаліць, смецце ці штосьці аднавіць."
+
+#. Author of an extension
+msgid "Daniel Fruzynski"
+msgstr "Daniel Fruzynski"
+
+#. Author URI of an extension
+msgid "http://www.poradnik-webmastera.com/"
+msgstr "http://www.poradnik-webmastera.com/"
+

@@ -1,29 +1,19 @@
+// Trash Manager JavaScript, version 1.1
+
 jQuery(document).ready( function($) {
 
 	// show warnings for bulk actions
 	$('#doaction, #doaction2').click(function(){
-		var action = $('select[name="action"]').val(), action2 = $('select[name="action2"]').val();
-		if ( action == 'delete' || action2 == 'delete' ) {
-			var msg = trashMgrL10n.bulkDelete;
-			if ( confirm(msg) ) {
-				return true;
-			}
+		var action = $('select[name="action"]').val(), action2 = $('select[name="action2"]').val(), msg = '';
+		if ( action == 'delete' || action2 == 'delete' )
+			msg = trashMgrL10n.bulkDelete;
+		else if ( action == 'trash' || action2 == 'trash' )
+			msg = trashMgrL10n.bulkTrash;
+		else if ( action == 'untrash' || action2 == 'untrash' )
+			msg = trashMgrL10n.bulkUntrash;
+		if ( msg != '' && !confirm( msg ) )
 			return false;
-		}
-		else if ( action == 'trash' || action2 == 'trash' ) {
-			var msg = trashMgrL10n.bulkTrash;
-			if ( confirm(msg) ) {
-				return true;
-			}
-			return false;
-		}
-		else if ( action == 'untrash' || action2 == 'untrash' ) {
-			var msg = trashMgrL10n.bulkUntrash;
-			if ( confirm(msg) ) {
-				return true;
-			}
-			return false;
-		}
+		return true;
 	});
 
 	// show warnings for single comment actions

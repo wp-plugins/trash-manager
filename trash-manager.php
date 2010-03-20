@@ -4,7 +4,7 @@ Plugin Name: Trash Manager
 Plugin URI: http://www.poradnik-webmastera.com/projekty/trash_manager/
 Description: This plugin allows you to delete Posts, Pages and Comments without moving them to Trash first. Additionally it restores all 'Are you sure?' questions when you try to delete, trash or restore something.
 Author: Daniel Frużyński
-Version: 1.1.1
+Version: 1.2
 Author URI: http://www.poradnik-webmastera.com/
 Text Domain: trash-manager
 */
@@ -28,7 +28,7 @@ Text Domain: trash-manager
 
 if ( !class_exists( 'TrashManager' ) ) {
 
-define( 'TRASH_MGR_JS_VER', '1.0' );
+define( 'TRASH_MGR_JS_VER', '1.1' );
 
 class TrashManager {
 	// Constructor
@@ -54,9 +54,6 @@ class TrashManager {
 			// Therefore we need to delete them (finally!) after they are moved to trash
 			add_action( 'trashed_post', array( &$this, 'trashed_post' ) );
 			add_action( 'trashed_comment', array( &$this, 'trashed_comment' ) );
-			
-			// Workaround: WP does not clear temporary variable after changing comment status
-			add_action( 'wp_set_comment_status', array( &$this, 'wp_set_comment_status' ), 10, 2 );
 		}
 	}
 	
@@ -72,13 +69,33 @@ class TrashManager {
 			WP_PLUGIN_URL.'/'.dirname( plugin_basename( __FILE__ ) ).'/trash-manager.js',
 			array( 'common' ), TRASH_MGR_JS_VER );
 		wp_localize_script( 'trash-manager', 'trashMgrL10n', array(
-			'bulkDelete' => __("You are about to delete the selected items.\n  'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
-			'bulkTrash' => __("You are about to trash the selected items.\n  'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
-			'bulkUntrash' => __("You are about to restore the selected items.\n  'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
-			'commentDelete' => __("You are about to delete this comment\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
-			'commentTrash' => __("You are about to trash this comment\n 'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
-			'commentUntrash' => __("You are about to restore this comment\n 'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
+			'bulkDelete' => get_option( 'trashmgr_bulk_ays_delete' ) ? __("You are about to delete the selected items.\n  'Cancel' to stop, 'OK' to delete.", 'trash-manager') : '',
+			'bulkTrash' => get_option( 'trashmgr_bulk_ays_trash' ) ? __("You are about to trash the selected items.\n  'Cancel' to stop, 'OK' to trash.", 'trash-manager') : '',
+			'bulkUntrash' => get_option( 'trashmgr_bulk_ays_untrash' ) ? __("You are about to restore the selected items.\n  'Cancel' to stop, 'OK' to restore.", 'trash-manager') : '',
+			'commentDelete' => get_option( 'trashmgr_comment_ays_delete' ) ? __("You are about to delete this comment\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager') : '',
+			'commentTrash' => get_option( 'trashmgr_comment_ays_trash' ) ? __("You are about to trash this comment\n 'Cancel' to stop, 'OK' to trash.", 'trash-manager') : '',
+			'commentUntrash' => get_option( 'trashmgr_comment_ays_untrash' ) ? __("You are about to restore this comment\n 'Cancel' to stop, 'OK' to restore.", 'trash-manager') : '',
 		) );
+		
+		register_setting( 'trash-manager', 'trashmgr_post_add_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_post_ays_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_post_ays_trash', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_post_ays_untrash', array( &$this, 'sanitise_bool' ) );
+		
+		register_setting( 'trash-manager', 'trashmgr_page_add_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_page_ays_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_page_ays_trash', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_page_ays_untrash', array( &$this, 'sanitise_bool' ) );
+		
+		register_setting( 'trash-manager', 'trashmgr_comment_add_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_comment_ays_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_comment_ays_trash', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_comment_ays_untrash', array( &$this, 'sanitise_bool' ) );
+		
+		//register_setting( 'trash-manager', 'trashmgr_bulk_add_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_bulk_ays_delete', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_bulk_ays_trash', array( &$this, 'sanitise_bool' ) );
+		register_setting( 'trash-manager', 'trashmgr_bulk_ays_untrash', array( &$this, 'sanitise_bool' ) );
 	}
 	
 	// Add Admin menu option
@@ -90,7 +107,7 @@ class TrashManager {
 	// Add actions to each post on Post List
 	function post_row_actions( $actions, $post ) {
 		// Add 'Delete permanently' to action list
-		if ( true && current_user_can('delete_post', $post->ID) 
+		if ( get_option( 'trashmgr_post_add_delete' ) && current_user_can('delete_post', $post->ID) 
 			&& isset( $actions['trash'] ) && !isset( $actions['delete'] ) ) {
 			$temp_actions = $actions;
 			$actions = array();
@@ -107,7 +124,7 @@ class TrashManager {
 		}
 		
 		// Add AYS question to Delete Permanently link
-		if ( true && isset( $actions['delete'] ) ) {
+		if ( get_option( 'trashmgr_post_ays_delete' ) && isset( $actions['delete'] ) ) {
 			$msg = sprintf( ('draft' == $post->post_status) ?
 				__("You are about to delete this draft '%s'\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager') : 
 				__("You are about to delete this post '%s'\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
@@ -116,7 +133,7 @@ class TrashManager {
 		}
 		
 		// Add AYS question to Trash link
-		if ( true && isset( $actions['trash'] ) ) {
+		if ( get_option( 'trashmgr_post_ays_trash' ) && isset( $actions['trash'] ) ) {
 			$msg = sprintf( 
 				__("You are about to trash this post '%s'\n 'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
 				$post->post_title );
@@ -124,7 +141,7 @@ class TrashManager {
 		}
 		
 		// Add AYS question to Restore link
-		if ( true && isset( $actions['untrash'] ) ) {
+		if ( get_option( 'trashmgr_post_ays_untrash' ) && isset( $actions['untrash'] ) ) {
 			$msg = sprintf( 
 				__("You are about to restore this post '%s'\n 'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
 				$post->post_title );
@@ -137,7 +154,7 @@ class TrashManager {
 	// Add actions to each page on Page List
 	function page_row_actions( $actions, $page ) {
 		// Add 'Delete permanently' to action list
-		if ( true && current_user_can('delete_page', $page->ID) 
+		if ( get_option( 'trashmgr_page_add_delete' ) && current_user_can('delete_page', $page->ID) 
 			&& isset( $actions['trash'] ) && !isset( $actions['delete'] ) ) {
 			$temp_actions = $actions;
 			$actions = array();
@@ -154,7 +171,7 @@ class TrashManager {
 		}
 		
 		// Add AYS question to Delete Permanently link
-		if ( true && isset( $actions['delete'] ) ) {
+		if ( get_option( 'trashmgr_page_ays_delete' ) && isset( $actions['delete'] ) ) {
 			$msg = sprintf( ('draft' == $page->post_status) ?
 				__("You are about to delete this draft '%s'\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager') : 
 				__("You are about to delete this page '%s'\n 'Cancel' to stop, 'OK' to delete.", 'trash-manager'),
@@ -163,7 +180,7 @@ class TrashManager {
 		}
 		
 		// Add AYS question to Trash link
-		if ( true && isset( $actions['trash'] ) ) {
+		if ( get_option( 'trashmgr_page_ays_trash' ) && isset( $actions['trash'] ) ) {
 			$msg = sprintf( 
 				__("You are about to trash this page '%s'\n 'Cancel' to stop, 'OK' to trash.", 'trash-manager'),
 				$page->post_title );
@@ -171,7 +188,7 @@ class TrashManager {
 		}
 		
 		// Add AYS question to Restore link
-		if ( true && isset( $actions['untrash'] ) ) {
+		if ( get_option( 'trashmgr_page_ays_untrash' ) && isset( $actions['untrash'] ) ) {
 			$msg = sprintf( 
 				__("You are about to restore this page '%s'\n 'Cancel' to stop, 'OK' to restore.", 'trash-manager'),
 				$page->post_title );
@@ -185,7 +202,7 @@ class TrashManager {
 	function comment_row_actions( $actions, $comment ) {
 		// Add 'Delete permanently' to action list
 		$post = get_post($comment->comment_post_ID);
-		if ( true && current_user_can('edit_post', $post->ID) 
+		if ( get_option( 'trashmgr_comment_add_delete' ) && current_user_can('edit_post', $post->ID) 
 			&& isset( $actions['trash'] ) && !isset( $actions['delete'] ) ) {
 			$temp_actions = $actions;
 			$actions = array();
@@ -220,24 +237,24 @@ class TrashManager {
 		}
 	}
 	
-	// Workaround: WP does not clear temporary variable after changing comment status
-	function wp_set_comment_status( $comment_id, $comment_status ) {
-		if ( ( $comment_status == 'trash' ) && isset( $GLOBALS['comment'] ) 
-			&& ( $GLOBALS['comment']->comment_ID == $comment_id ) ) {
-			unset( $GLOBALS['comment'] );
-		}
-	}
-	
 	// Delete comment after it gets trashed instead of deleted
 	function trashed_comment( $comment_ID ) {
 		global $action;
 		if ( isset( $action ) ) {
 			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 				if ( ( $action == 'delete-comment' ) && isset( $_POST['delete'] ) && ($_POST['delete'] == 1 ) ) {
+					// Workaround: WP does not clear temporary variable after changing comment status
+					if ( isset( $GLOBALS['comment'] ) && ( $GLOBALS['comment']->comment_ID == $comment_id ) ) {
+						unset( $GLOBALS['comment'] );
+					}
 					wp_delete_comment( $comment_ID, true );
 				}
 			} else {
 				if ( $action == 'deletecomment' ) {
+					// Workaround: WP does not clear temporary variable after changing comment status
+					if ( isset( $GLOBALS['comment'] ) && ( $GLOBALS['comment']->comment_ID == $comment_id ) ) {
+						unset( $GLOBALS['comment'] );
+					}
 					wp_delete_comment( $comment_ID, true );
 				}
 			}
@@ -248,14 +265,209 @@ class TrashManager {
 	function options_panel() {
 ?>
 <div class="wrap">
-<h2>Trash Manager</h2>
+<?php screen_icon(); ?>
+<h2><?php _e('Trash Manager - Options', 'trash-manager'); ?></h2>
 
-<p>No configuration yet - I plan to add it in next version.</p>
+<form name="dofollow" action="options.php" method="post">
+<?php settings_fields( 'trash-manager' ); ?>
+<table class="form-table">
 
+<!-- Posts -->
+<tr><th colspan="2"><h3><?php _e('Posts:', 'trash-manager'); ?></h3></th></tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_post_add_delete"><?php _e('Add \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_post_add_delete" name="trashmgr_post_add_delete" value="yes" <?php checked( true, get_option( 'trashmgr_post_add_delete' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_post_ays_delete"><?php _e('Show \'Are you sure?\' question for \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_post_ays_delete" name="trashmgr_post_ays_delete" value="yes" <?php checked( true, get_option( 'trashmgr_post_ays_delete' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_post_ays_trash"><?php _e('Show \'Are you sure?\' question for \'Trash\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_post_ays_trash" name="trashmgr_post_ays_trash" value="yes" <?php checked( true, get_option( 'trashmgr_post_ays_trash' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_post_ays_untrash"><?php _e('Show \'Are you sure?\' question for \'Restore\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_post_ays_untrash" name="trashmgr_post_ays_untrash" value="yes" <?php checked( true, get_option( 'trashmgr_post_ays_untrash' ) ); ?> />
+</td>
+</tr>
+
+<!-- Pages -->
+<tr><th colspan="2"><h3><?php _e('Pages:', 'trash-manager'); ?></h3></th></tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_page_add_delete"><?php _e('Add \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_page_add_delete" name="trashmgr_page_add_delete" value="yes" <?php checked( true, get_option( 'trashmgr_page_add_delete' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_page_ays_delete"><?php _e('Show \'Are you sure?\' question for \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_page_ays_delete" name="trashmgr_page_ays_delete" value="yes" <?php checked( true, get_option( 'trashmgr_page_ays_delete' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_page_ays_trash"><?php _e('Show \'Are you sure?\' question for \'Trash\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_page_ays_trash" name="trashmgr_page_ays_trash" value="yes" <?php checked( true, get_option( 'trashmgr_page_ays_trash' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_page_ays_untrash"><?php _e('Show \'Are you sure?\' question for \'Restore\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_page_ays_untrash" name="trashmgr_page_ays_untrash" value="yes" <?php checked( true, get_option( 'trashmgr_page_ays_untrash' ) ); ?> />
+</td>
+</tr>
+
+<!-- Comments -->
+<tr><th colspan="2"><h3><?php _e('Comments:', 'trash-manager'); ?></h3></th></tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_comment_add_delete"><?php _e('Add \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_comment_add_delete" name="trashmgr_comment_add_delete" value="yes" <?php checked( true, get_option( 'trashmgr_comment_add_delete' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_comment_ays_delete"><?php _e('Show \'Are you sure?\' question for \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_comment_ays_delete" name="trashmgr_comment_ays_delete" value="yes" <?php checked( true, get_option( 'trashmgr_comment_ays_delete' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_comment_ays_trash"><?php _e('Show \'Are you sure?\' question for \'Trash\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_comment_ays_trash" name="trashmgr_comment_ays_trash" value="yes" <?php checked( true, get_option( 'trashmgr_comment_ays_trash' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_comment_ays_untrash"><?php _e('Show \'Are you sure?\' question for \'Restore\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_comment_ays_untrash" name="trashmgr_comment_ays_untrash" value="yes" <?php checked( true, get_option( 'trashmgr_comment_ays_untrash' ) ); ?> />
+</td>
+</tr>
+
+<!-- Bulk Actions -->
+<tr><th colspan="2"><h3><?php _e('Bulk Actions:', 'trash-manager'); ?></h3></th></tr>
+
+<tr><th colspan="2"><?php _e('Bulk actions allows to perform single action for all checked items. They are shared between posts, pages, etc., so there are no separate options for each of these items.', 'trash-manager'); ?></th></tr>
+
+<?php /*
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_bulk_add_delete"><?php _e('Add \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_bulk_add_delete" name="trashmgr_bulk_add_delete" value="yes" <?php checked( true, get_option( 'trashmgr_bulk_add_delete' ) ); ?> />
+</td>
+</tr>
+*/ ?>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_bulk_ays_delete"><?php _e('Show \'Are you sure?\' question for \'Delete Permanently\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_bulk_ays_delete" name="trashmgr_bulk_ays_delete" value="yes" <?php checked( true, get_option( 'trashmgr_bulk_ays_delete' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_bulk_ays_trash"><?php _e('Show \'Are you sure?\' question for \'Trash\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_bulk_ays_trash" name="trashmgr_bulk_ays_trash" value="yes" <?php checked( true, get_option( 'trashmgr_bulk_ays_trash' ) ); ?> />
+</td>
+</tr>
+
+<tr>
+<th scope="row" style="text-align:right; vertical-align:top;">
+<label for="trashmgr_bulk_ays_untrash"><?php _e('Show \'Are you sure?\' question for \'Restore\' action', 'trash-manager'); ?>: </label>
+</th>
+<td>
+<input type="checkbox" id="trashmgr_bulk_ays_untrash" name="trashmgr_bulk_ays_untrash" value="yes" <?php checked( true, get_option( 'trashmgr_bulk_ays_untrash' ) ); ?> />
+</td>
+</tr>
+
+</table>
+
+<p class="submit">
+<input type="submit" name="Submit" value="<?php _e('Save settings', 'trash-manager'); ?>" /> 
+</p>
+
+</form>
 </div>
 <?php
 	}
+	
+	// Sanitise function for boolean options
+	function sanitise_bool( $value ) {
+		return isset( $value ) && ( $value == 'yes' );
+	}
 }
+
+add_option( 'trashmgr_post_add_delete', true ); // Add 'Delete Permanently' action for Posts
+add_option( 'trashmgr_post_ays_delete', true ); // Show 'Are you sure?' question for 'Delete Permanently' action for Posts
+add_option( 'trashmgr_post_ays_trash', true ); // Show 'Are you sure?' question for 'Trash' action for Posts
+add_option( 'trashmgr_post_ays_untrash', true ); // Show 'Are you sure?' question for 'Restore' action for Posts
+
+add_option( 'trashmgr_page_add_delete', true ); // Add 'Delete Permanently' action for Pages
+add_option( 'trashmgr_page_ays_delete', true ); // Show 'Are you sure?' question for 'Delete Permanently' action for Pages
+add_option( 'trashmgr_page_ays_trash', true ); // Show 'Are you sure?' question for 'Trash' action for Pages
+add_option( 'trashmgr_page_ays_untrash', true ); // Show 'Are you sure?' question for 'Restore' action for Pages
+
+add_option( 'trashmgr_comment_add_delete', true ); // Add 'Delete Permanently' action for Comments
+add_option( 'trashmgr_comment_ays_delete', true ); // Show 'Are you sure?' question for 'Delete Permanently' action for Comments
+add_option( 'trashmgr_comment_ays_trash', true ); // Show 'Are you sure?' question for 'Trash' action for Comments
+add_option( 'trashmgr_comment_ays_untrash', true ); // Show 'Are you sure?' question for 'Restore' action for Comments
+
+//add_option( 'trashmgr_bulk_add_delete', true ); // Add 'Delete Permanently' action to bulk action list
+add_option( 'trashmgr_bulk_ays_delete', true ); // Show 'Are you sure?' question for 'Delete Permanently' action on bulk action list
+add_option( 'trashmgr_bulk_ays_trash', true ); // Show 'Are you sure?' question for 'Trash' action on bulk action list
+add_option( 'trashmgr_bulk_ays_untrash', true ); // Show 'Are you sure?' question for 'Restore' action on bulk action list
 
 $wp_trash_manager = new TrashManager();
 
